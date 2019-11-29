@@ -4,9 +4,9 @@ app.models.general_traffic
 This module contains the model format of the traffic stats over the whole website.
 """
 
-from app import db
+from back.app import db
 from datetime import datetime
-from app.models.json import JsonModel
+from back.app.models.json import JsonModel
 
 class GeneralTraffic(db.Model, JsonModel):
     """
@@ -46,4 +46,4 @@ class GeneralTraffic(db.Model, JsonModel):
     time = db.Column(db.DateTime, default=datetime.utcnow)
     
     def __repr__(self):
-        return '<Stats10 {}'.format(self.website)
+        return '<GeneralTraffic {}'.format(self.time)

@@ -4,9 +4,9 @@ app.models.section_traffic
 This module contains the model format of the traffic stats from a section.
 """
 
-from app import db
+from back.app import db
 from datetime import datetime
-from app.models.json import JsonModel
+from back.app.models.json import JsonModel
 
 class SectionTraffic(db.Model, JsonModel):
     """
@@ -38,7 +38,7 @@ class SectionTraffic(db.Model, JsonModel):
     
     
     id = db.Column(db.Integer, primary_key=True)
-    section = db.Column(db.String(128), index=True, unique=True)
+    section = db.Column(db.String(128), index=True)
     hits = db.Column(db.Integer, default=0) 
     average10 = db.Column(db.Integer, default=0) 
     average60 = db.Column(db.Integer, default=0) 
@@ -49,4 +49,4 @@ class SectionTraffic(db.Model, JsonModel):
     time = db.Column(db.DateTime, default=datetime.utcnow) 
     
     def __repr__(self):
-        return '<Stats10 {}'.format(self.website)
+        return '<SectionTraffic {}'.format(self.section)

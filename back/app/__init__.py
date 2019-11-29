@@ -1,5 +1,5 @@
 from flask import Flask
-from app.config import Config
+from back.app.config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -8,3 +8,10 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+from back.app.routes.section_traffic import section_traffic_blueprint
+from back.app.routes.general_traffic import general_traffic_blueprint
+from back.app.routes.alerts import alerts_blueprint
+
+app.register_blueprint(section_traffic_blueprint, url_prefix='/section-traffic')
+app.register_blueprint(general_traffic_blueprint, url_prefix='/general-traffic')
+app.register_blueprint(alerts_blueprint, url_prefix='/alerts')
