@@ -71,7 +71,7 @@ class ConsoleGUI(npyscreen.NPSApp):
         self.sections_stats_title = self.window.add(npyscreen.TitleText, name='Most Visited Sections', relx=2, rely=18)
         self.sections_stats_title.editable = False
         self.sections_stats_grid = self.window.add(StatGrid, max_height=12, column_width=20, relx=2, rely=20, 
-                                                   col_titles=['Sections','Hits (10s)','Avg hits (10min)','Avg hits (60min)','Unique hosts','Total Bytes','Availability','Codes count'] )
+                                                   col_titles=['Sections','Hits (10s)','Average hits','Avg hits (60min)','Unique hosts','Total Bytes','Availability','Codes count'] )
         self.sections_stats_grid.editable = False
         self.sections_stats_grid.values = []
 

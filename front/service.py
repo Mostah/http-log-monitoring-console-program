@@ -60,8 +60,8 @@ class Service:
         time_monitoring = now - self.begining_time
         
         data = ['',
-                'Description: If no timeframe is mentioned, stats ',
-                'are calculated over a 60min timeframe.',
+                'Description: If no timeframe is mentioned, stats are',
+                'calculated over a 10 minutes timeframe.',
                 '',
                 'Time monitoring:      '+str(time_monitoring)[:-7], 
                 'Alert Threshold:      '+str(self.alert_threshold)+'s', 
