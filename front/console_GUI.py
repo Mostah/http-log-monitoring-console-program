@@ -7,6 +7,8 @@ This module manages the application GUI and keep it updated in realtime.
 import npyscreen
 from datetime import datetime
 
+from .service import Service
+
 class ConsoleGUI(npyscreen.NPSApp):
     """
     The class use to render the application in the user console
@@ -22,10 +24,8 @@ class ConsoleGUI(npyscreen.NPSApp):
         self.sections_stats_grid = None
         self.alert_history_grid = None
         
-        # values for the general information frame
-        self.alert_threshold = alert_threshold
-        self.alert_window = alert_window
-        self.begining_time = datetime.utcnow()
+        # reference to Service module functions that return data values
+        self.service = Service(alert_threshold, alert_window)
 
     def while_waiting(self):
         """ defines the default actions to be performed while waiting for user
@@ -33,26 +33,10 @@ class ConsoleGUI(npyscreen.NPSApp):
         """
 
         # updating data values for all section
-        self.general_information.values = ['','Description: If no timeframe is mentioned, stats ','are calculated over a 60min timeframe.',
-                                           '','Time monitoring:      00:12:24', 'Alert Threshold:      10s', 
-                                           'Alert Window:         120s', '', '', 'Press enter or ctrl-c to quit']
-        self.traffic_information.values = ['', 'Hits (10s):         13/s', '', 'Mininimum:          2/s', 
-                                        'Average:            14/s', 'Maximum:            25/s', '', 
-                                           'Availability:       0.89', 'Unique hosts:       16', 'Total Bytes:        62KB' ]
-        self.sections_stats_grid.values = [
-            ['api','24/s','25/s','21/s','6','22KB','0.7','200: 24, 401: 2, 500: 3'],
-            ['api','24/s','25/s','21/s','6','22KB','0.8','200: 24, 401: 2, 500: 3'],
-            ['api','24/s','25/s','21/s','6','22KB','0.85','200: 24, 401: 2, 500: 3'],
-            ['api','24/s','25/s','21/s','6','22KB','0.9','200: 24, 401: 2, 500: 3'],
-            ['api','24/s','25/s','21/s','6','22KB','0.95','200: 24, 401: 2, 500: 3'],
-            ['api','24/s','25/s','21/s','6','22KB','0.99','200: 24, 401: 2, 500: 3'],
-        ]
-        self.alert_history_grid.values = [
-            ['High traffic on section : api','2019-10-29 11:12:36', '87/s'],
-            ['High traffic on section : api','2019-10-29 11:12:36', '87/s'],
-            ['Back to normal on section : api', '2019-10-29 11:12:36', '12/s']
-        ]
-
+        self.general_information.values = self.service.get_general_information()
+        self.traffic_information.values = self.service.get_traffic_information()
+        self.sections_stats_grid.values = self.service.get_sections_stats()
+        self.alert_history_grid.values = self.service.get_alert_history()
 
         # display updated values in widgets, call 'Widget.display()' method
         self.general_information.display()
@@ -66,7 +50,7 @@ class ConsoleGUI(npyscreen.NPSApp):
         """
 
         # time(100ms) to wait before rerendering
-        self.keypress_timeout_default = 10
+        self.keypress_timeout_default = 20
 
         # Form widget instance
         self.window = WindowForm(parentApp=self, name="HTTP Log Monitor",)
