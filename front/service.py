@@ -6,6 +6,7 @@ This module fetch and transform the data to be ready to display.
 """
 
 import random
+import requests
 from datetime import datetime
 
 class Service:
@@ -36,6 +37,8 @@ class Service:
         get history alert from all section
     
     """
+    
+    API_URL = 'http://localhost:5000'
     
     def __init__(self, alert_threshold, alert_window):
         """
@@ -75,36 +78,49 @@ class Service:
         """get stats computed from the selected website
         """
         
+        r = requests.get(self.API_URL+'/general-traffic/last').json()
         data = ['',
-                'Hits (10s):         '+str(random.choice([8,9,10,11,12]))+'/s',
+                'Hits (10s):         '+str(r['hits'])+'/s',
                 '',
-                'Mininimum:          '+str(random.choice([8,9,10,11,12]))+'/s',
-                'Average:            '+str(random.choice([8,9,10,11,12]))+'/s',
-                'Maximum:            '+str(random.choice([8,9,10,11,12]))+'/s',
+                'Mininimum:          '+str(r['minimum'])+'/s',
+                'Average:            '+str(r['maximum'])+'/s',
+                'Maximum:            '+str(r['average'])+'/s',
                 '',
-                'Availability:       '+str(random.choice([0.89,0.91,0.92,0.93,0.94])),
-                'Unique hosts:       '+str(random.choice([8,9,10,11,12])),
-                'Total Bytes:        '+str(random.choice([8,9,10,11,12]))+'KB' ]
+                'Availability:       '+str(r['availability']),
+                'Unique hosts:       '+str(r['unique_hosts']),
+                'Total Bytes:        '+str(r['total_bytes'])+'KB' ]
+        
         return data
     
     def get_sections_stats(self):
         """get stats computed over all section
         """
         
-        data = [
-            ['api',str(random.choice([8,9,10,11,12]))+'/s',str(random.choice([8,9,10,11,12]))+'/s',str(random.choice([8,9,10,11,12]))+'/s','6','22KB','0.7','200: 24, 401: 2, 500: 3'],
-            ['other',str(random.choice([8,9,10,11,12]))+'/s',str(random.choice([8,9,10,11,12]))+'/s',str(random.choice([8,9,10,11,12]))+'/s','6','22KB','0.7','200: 24, 401: 2, 500: 3'],
-        ]
+        r = requests.get(self.API_URL+'/section-traffic/lasts').json()
+        data = [[
+            entry['section'],
+            str(entry['hits'])+'/s',
+            str(entry['average10'])+'/s',
+            str(entry['average60'])+'/s',
+            entry['unique_hosts'],
+            str(entry['total_bytes'])+'KB',
+            entry['availability'],
+            entry['codes_count']
+        ] for entry in r]
+        
         return data
     
     def get_alert_history(self):
         """get history alert from all section
         """
         
-        data = [
-            ['High traffic on section : api','2019-10-29 11:12:36', '87/s'],
-            ['High traffic on section : api','2019-10-29 11:12:36', '87/s'],
-            ['Back to normal on section : api', '2019-10-29 11:12:36', '12/s']
-        ]
+        r = requests.get(self.API_URL+'/alerts/history').json()
+        
+        data = [[
+            entry['status']*'High traffic on : '+(1-entry['status'])* 'Back to normal on : '+ entry['section'],
+            entry['time'],
+            str(entry['hits'])+'/s']
+            for entry in r]
+ 
         return data
     

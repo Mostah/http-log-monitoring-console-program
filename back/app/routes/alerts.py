@@ -8,7 +8,9 @@ alerts_blueprint = Blueprint('alerts', __name__)
 
 @alerts_blueprint.route('/history', methods=['GET'])
 def get_alerts_history():
-    alerts_history = Alerts.query.limit(20)
+    alerts_history = Alerts.query\
+        .order_by(Alerts.time.desc())\
+        .limit(20)
     return jsonify([alert.as_dict() for alert in alerts_history]), 200
 
 # TODO add time to required fields

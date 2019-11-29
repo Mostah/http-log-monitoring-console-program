@@ -11,6 +11,7 @@ section_traffic_blueprint = Blueprint('section-traffic', __name__)
 def get_sections_stats():
     last_sections_stats = db.session.query(SectionTraffic, func.max(SectionTraffic.time))\
         .group_by(SectionTraffic.section)\
+        .order_by(SectionTraffic.hits.desc())\
         .all()
     return jsonify([stats[0].as_dict() for stats in last_sections_stats]), 200
 
