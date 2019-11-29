@@ -1,5 +1,5 @@
 """
-app.models.json
+back.app.models.json
 
 This module aims at converting models in a json format.
 """

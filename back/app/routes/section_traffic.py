@@ -1,3 +1,9 @@
+"""
+back.app.routes.general_traffic
+
+This module contains the different services for the sections traffic information table.
+"""
+
 from flask import jsonify, request, Blueprint
 from sqlalchemy import func
 
@@ -9,6 +15,16 @@ section_traffic_blueprint = Blueprint('section-traffic', __name__)
 
 @section_traffic_blueprint.route('/lasts', methods=['GET'])
 def get_sections_stats():
+    """ Route that returns the last stats from each section registered in the database
+    
+    Returns
+    -------
+    list
+        list of dict containing the stats information of the section
+    status code : int
+        HTTP status code of the request
+    """
+    
     last_sections_stats = db.session.query(SectionTraffic, func.max(SectionTraffic.time))\
         .group_by(SectionTraffic.section)\
         .order_by(SectionTraffic.hits.desc())\
@@ -19,6 +35,35 @@ def get_sections_stats():
 @section_traffic_blueprint.route('/add', methods=['POST'])
 @required_fields(['section','hits', 'average10', 'average60', 'unique_hosts', 'total_bytes', 'availability', 'codes_count'])
 def add_section_stats():
+    """ Route that create new a entry for a section traffic information in database
+      
+    Parameters
+    ----------
+    section : str
+        section this entry is about
+    hits : int
+        hits per seconds calculated over last 10 sec
+    average10 : int
+        average of hits per second over last 10 mins
+    average60 : int
+        average of hits per second over last 60 mins
+    unique_hosts : int
+        number of different hosts calculated over last 10 mins
+    total_bytes : int
+        number of bytes transfered over last 10 mins
+    availability : float
+        availability over the last 10 mins
+    codes_count : str
+        status codes over the last 10 mins
+    time : datetime
+        time from the log for this batch of stats
+
+    Returns
+    -------
+    status code : int
+        HTTP status code of the request
+    """
+    
     form = { c.name: request.form[c.name] for c in SectionTraffic(
         ).__table__.columns if c.name in request.form }
     section_stats = SectionTraffic(**form)

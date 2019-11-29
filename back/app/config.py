@@ -1,6 +1,6 @@
 
 """
-app.config
+back.app.config
 
 This module contains the constants to config the app.
 """

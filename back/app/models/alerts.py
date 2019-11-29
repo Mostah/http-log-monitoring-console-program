@@ -1,5 +1,5 @@
 """
-app.models.alerts
+back.app.models.alerts
 
 This module contains the model format for the alerts.
 """

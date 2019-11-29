@@ -1,5 +1,5 @@
 """
-app.models.general_traffic
+back.app.models.general_traffic
 
 This module contains the model format of the traffic stats over the whole website.
 """

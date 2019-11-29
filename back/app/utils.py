@@ -1,5 +1,5 @@
 """
-app._utils
+back.app.utils
 
 This module provide usefull general functions for the app.
 """

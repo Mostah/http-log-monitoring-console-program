@@ -1,5 +1,5 @@
 """
-app.models.section_traffic
+back.app.models.section_traffic
 
 This module contains the model format of the traffic stats from a section.
 """
