@@ -9,6 +9,7 @@ from threading import Lock, Thread
 from datetime import datetime, timedelta
 import time
 
+from statistics_manager import StatisticsManager
 
 class LogReader(Thread):
     """ Module, first bloc of the pipeline, that read logs from a file and convoy them through the pipeline.
@@ -55,6 +56,7 @@ class LogReader(Thread):
         # for the purpose of running a scenario from a log file
         self.time_difference = None #timedelta
         self.fictional_time = None #datetime
+        self.batch = []
         
         # next element of the pipeline
         self.statistics_manager = StatisticsManager()
@@ -71,24 +73,11 @@ class LogReader(Thread):
                     try:
                         # iterates over the lines, the previous one is garbage collected
                         line = logs.__next__() 
-                        
-                        #create a dict representing the currentlog
                         log = { self.FIELDS_NAMES[i]: value for i, value in enumerate(csv.reader([line]).__next__()) }
                         
+                        # send the log throught the pipeline if it is not corrupted
                         if self._is_formatted(log):
-                            #if time_difference is not define yet
-                            if not self.time_difference: 
-                                self.time_difference = datetime.now() - datetime.fromtimestamp(int(log['date'])) 
-                                self.fictional_time = datetime.now() - self.time_difference
-                                
-                            # logs are not in order but I assume there is no more 3s difference between two successive log
-                            # thus it has no major impact in the stats computation as it is over 10s
-                            while self.fictional_time < datetime.fromtimestamp(int(log['date'])): 
-                                time.sleep(0.2)
-                                self.fictional_time = datetime.now() - self.time_difference
-                                
-                            # transfer the log through the next in the pipeline 
-                            self.statistics_manager.push_log(log)
+                            self._push_logs(log)
                     
                     except StopIteration:
                         # waiting for more lines
@@ -98,8 +87,29 @@ class LogReader(Thread):
         """method that stop the process of reading logs from the file
         """
         self.running = False
+        
+    def _push_logs(self, log):
+        #if time_difference is not define yet
+        if not self.time_difference: 
+            self.time_difference = datetime.now() - datetime.fromtimestamp(int(log['date'])) 
+            
+        # logs may not be in order, but I assume there is no more than 3s difference between two successive logs,
+        # thus it should have no major impact in the stats computation as it is computed over 10s
+        self.fictional_time = datetime.now() - self.time_difference
+        while self.fictional_time < datetime.fromtimestamp(int(log['date'])):
+            
+            # transfer the logs throught the next bloc of the pipeline, at max 1 time per seconds
+            self.statistics_manager.push_logs(self.batch)
+            self.batch = []
+            
+            # wait for the next second TODO calculate the right time to wait, not 1s
+            time.sleep(1)
+            self.fictional_time = datetime.now() - self.time_difference
+
+        # insert the log at the begining to keep the log in the same order as in the file
+        self.batch.insert(0,log)
          
-    #TODO discard improperly formatted lines, unformated lines: if rest key of none value in field names, and check each value of each field with regex
+    #TODO discard improperly formatted lines, unformated lines: if rest key of none value in field names, and check each value of each field with rege
     def _is_formatted(self, log):
         return True
     
