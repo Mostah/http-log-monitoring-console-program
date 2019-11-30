@@ -28,8 +28,8 @@ class SectionTraffic(db.Model, JsonModel):
         number of bytes transfered over the given timeframe
     availability : float
         availability over the the given timeframe
-    codes_count : str
-        status codes over the the given timeframe
+    error_codes_count : str
+        error status codes count over the given timeframe
     time : datetime
         time from the log for this batch of stats
     """
@@ -42,7 +42,7 @@ class SectionTraffic(db.Model, JsonModel):
     unique_hosts = db.Column(db.Integer, default=0) 
     total_bytes = db.Column(db.Integer, default=0) 
     availability = db.Column(db.Float, default=0) 
-    codes_count = db.Column(db.String(128), default='') 
+    error_codes_count = db.Column(db.String(128), default='') 
     time = db.Column(db.DateTime, default=datetime.utcnow) 
     
     def __repr__(self):

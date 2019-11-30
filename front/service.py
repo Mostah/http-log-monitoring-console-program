@@ -109,7 +109,7 @@ class Service:
             entry['unique_hosts'],
             str(entry['total_bytes'])+'KB',
             round(entry['availability'],2),
-            entry['codes_count']
+            entry['error_codes_count']
         ] for entry in r]
         
         return data
@@ -123,7 +123,7 @@ class Service:
         data = [[
             entry['status']*'High traffic on : '+(1-entry['status'])* 'Back to normal on : '+ entry['section'],
             entry['time'],
-            str(entry['hits'])+'/s']
+            str(round(entry['hits'],2))+'/s']
             for entry in r]
  
         return data

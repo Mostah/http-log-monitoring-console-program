@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 from .metrics import GeneralMetrics, SectionMetrics
 from .statistics import Statistics
 from .service import Service
+from .alerter import Alerter
 
 class StatisticsManager:
     """
@@ -73,7 +74,7 @@ class StatisticsManager:
 
         # next blocs of the pipeline
         self.service = Service()
-        #self.alerter = Alerter()
+        self.alerter = Alerter(log_reader)
 
         
     
@@ -104,7 +105,7 @@ class StatisticsManager:
         # send new metrics to the next blocs of the pipeline
         self.service.add_general_metrics(self.general_metrics)
         self.service.add_sections_metrics(self.sections_metrics)
-        # self.alerter.push_metrics()
+        self.alerter.push_metrics(self.sections_metrics)
     
     def _remove_outdated_data(self):
         """
@@ -157,7 +158,7 @@ class StatisticsManager:
             unique_hosts = Statistics.get_unique_hosts(batch),
             total_bytes = Statistics.get_total_bytes(batch),
             availability = Statistics.get_availability(batch),
-            codes_count = '  '.join([str(key) + ': ' + str(value) for key, value in Statistics.get_codes_count(batch).items()])
+            error_codes_count = '  '.join([key + ': ' + str(value) for key, value in Statistics.get_codes_count(batch).items() if int(key) > 300])
         ) for section, batch in self.sections_batch.items()}
 
     

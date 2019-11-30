@@ -27,6 +27,8 @@ class Statistics:
         return the minimum hits of the given list
     get_maximum_hits
         return the maximum hits of the given list
+    get_average_metrics_hits
+        return the average hits over the batch of metrics from a section
      """
     
     @staticmethod
@@ -142,3 +144,17 @@ class Statistics:
         if len(hits) == 0:
             return 0
         return max([hit['number'] for hit in hits])
+    
+    @staticmethod
+    def get_average_metrics_hits(metrics_batch):
+        """ return the average hits over the batch of metrics from a section
+        
+        Parameters
+        ----------
+        metrics_batch : list
+            list of SectionMetrics
+        """
+        
+        if len(metrics_batch) == 0:
+            return 0
+        return sum([metrics.hits for metrics in metrics_batch]) / len(metrics_batch)

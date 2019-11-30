@@ -70,7 +70,7 @@ class ConsoleGUI(npyscreen.NPSApp):
         """
 
         # time(100ms) to wait before rerendering
-        self.keypress_timeout_default = 20
+        self.keypress_timeout_default = 10
 
         # Form widget instance
         self.window = WindowForm(parentApp=self, name="HTTP Log Monitor",)
@@ -91,7 +91,7 @@ class ConsoleGUI(npyscreen.NPSApp):
         self.sections_stats_title = self.window.add(npyscreen.TitleText, name='Most Visited Sections', relx=2, rely=18)
         self.sections_stats_title.editable = False
         self.sections_stats_grid = self.window.add(StatGrid, max_height=12, column_width=20, relx=2, rely=20, 
-                                                   col_titles=['Sections','Hits (10s)','Average hits','Unique hosts','Total Bytes','Availability','Codes count'] )
+                                                   col_titles=['Sections','Hits (10s)','Average hits','Unique hosts','Total Bytes','Availability','Error codes count'] )
         self.sections_stats_grid.editable = False
         self.sections_stats_grid.values = []
 
