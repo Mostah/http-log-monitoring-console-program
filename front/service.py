@@ -21,6 +21,8 @@ class Service:
         time (in seconds) over which is calculated the average hits for the alert
     begining_time : datetime
         time of the instanciation of this module
+    timeframe : int
+        timeframe selected by the user over which stats are computed
     
     Methods
     -------
@@ -40,7 +42,7 @@ class Service:
     
     API_URL = 'http://localhost:5000'
     
-    def __init__(self, alert_threshold, alert_window):
+    def __init__(self, alert_threshold, alert_window, timeframe):
         """
         Parameters
         ----------
@@ -48,8 +50,10 @@ class Service:
             threshold from which an alert is triggered
         alert_window : int
             time (in seconds) over which is calculated the average hits for the alert
+        timeframe : int
+            timeframe selected by the user over which stats are computed
         """
-        
+        self.TIMEFRAME = timeframe
         self.alert_threshold = alert_threshold
         self.alert_window = alert_window
         self.begining_time = datetime.utcnow()
@@ -64,12 +68,13 @@ class Service:
         
         data = ['',
                 'Description: If no timeframe is mentioned, stats are',
-                'calculated over a 10 minutes timeframe.',
+                'calculated over the selected timeframe.',
+                '',
+                'Selected timeframe    '+str(self.TIMEFRAME)+'min',
                 '',
                 'Time monitoring:      '+str(time_monitoring)[:-7], 
                 'Alert Threshold:      '+str(self.alert_threshold)+'s', 
                 'Alert Window:         '+str(self.alert_window)+'s', 
-                '', 
                 '', 
                 'Press enter or ctrl-c to quit']
         return data
@@ -100,8 +105,7 @@ class Service:
         data = [[
             entry['section'],
             str(entry['hits'])+'/s',
-            str(entry['average10'])+'/s',
-            str(entry['average60'])+'/s',
+            str(entry['average'])+'/s',
             entry['unique_hosts'],
             str(entry['total_bytes'])+'KB',
             entry['availability'],

@@ -12,9 +12,29 @@ from .service import Service
 class ConsoleGUI(npyscreen.NPSApp):
     """
     The class use to render the application in the user console
+    
+    Attributes
+    ----------
+    alert_threshold : int
+        threshold from which an alert is triggered
+    alert_window : int
+        time (in seconds) over which is calculated the average hits for the alert
+    timeframe : int
+        timeframe selected by the user over which stats are computed
     """
 
-    def __init__(self, alert_threshold, alert_window):
+    def __init__(self, alert_threshold, alert_window, timeframe):
+        """
+        Parameters
+        ----------
+        alert_threshold : int
+            threshold from which an alert is triggered
+        alert_window : int
+            time (in seconds) over which is calculated the average hits for the alert
+        timeframe : int
+            timeframe selected by the user over which stats are computed
+        """
+        
         # npyscreen form widget, parent of all widgets in GUI
         self.window = None
         
@@ -25,7 +45,7 @@ class ConsoleGUI(npyscreen.NPSApp):
         self.alert_history_grid = None
         
         # reference to Service module functions that return data values
-        self.service = Service(alert_threshold, alert_window)
+        self.service = Service(alert_threshold, alert_window, timeframe)
 
     def while_waiting(self):
         """ defines the default actions to be performed while waiting for user
@@ -71,7 +91,7 @@ class ConsoleGUI(npyscreen.NPSApp):
         self.sections_stats_title = self.window.add(npyscreen.TitleText, name='Most Visited Sections', relx=2, rely=18)
         self.sections_stats_title.editable = False
         self.sections_stats_grid = self.window.add(StatGrid, max_height=12, column_width=20, relx=2, rely=20, 
-                                                   col_titles=['Sections','Hits (10s)','Average hits','Avg hits (60min)','Unique hosts','Total Bytes','Availability','Codes count'] )
+                                                   col_titles=['Sections','Hits (10s)','Average hits','Unique hosts','Total Bytes','Availability','Codes count'] )
         self.sections_stats_grid.editable = False
         self.sections_stats_grid.values = []
 

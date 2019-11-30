@@ -20,18 +20,16 @@ class SectionTraffic(db.Model, JsonModel):
         section this entry is about
     hits : int
         hits per seconds calculated over last 10 sec
-    average10 : int
-        average of hits per second over last 10 mins
-    average60 : int
-        average of hits per second over last 60 mins
+    average : int
+        average of hits per second over the given timeframe
     unique_hosts : int
-        number of different hosts calculated over last 10 mins
+        number of different hosts calculated over the given timeframe
     total_bytes : int
-        number of bytes transfered over last 10 mins
+        number of bytes transfered over the given timeframe
     availability : float
-        availability over the last 10 mins
+        availability over the the given timeframe
     codes_count : str
-        status codes over the last 10 mins
+        status codes over the the given timeframe
     time : datetime
         time from the log for this batch of stats
     """
@@ -40,8 +38,7 @@ class SectionTraffic(db.Model, JsonModel):
     id = db.Column(db.Integer, primary_key=True)
     section = db.Column(db.String(128), index=True)
     hits = db.Column(db.Integer, default=0) 
-    average10 = db.Column(db.Integer, default=0) 
-    average60 = db.Column(db.Integer, default=0) 
+    average = db.Column(db.Integer, default=0) 
     unique_hosts = db.Column(db.Integer, default=0) 
     total_bytes = db.Column(db.Integer, default=0) 
     availability = db.Column(db.Float, default=0) 

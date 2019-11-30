@@ -33,7 +33,7 @@ def get_sections_stats():
 
 # TODO add time to required fields
 @section_traffic_blueprint.route('/add', methods=['POST'])
-@required_fields(['section','hits', 'average10', 'average60', 'unique_hosts', 'total_bytes', 'availability', 'codes_count'])
+@required_fields(['section','hits', 'average', 'unique_hosts', 'total_bytes', 'availability', 'codes_count'])
 def add_section_stats():
     """ Route that create new a entry for a section traffic information in database
       
@@ -42,19 +42,17 @@ def add_section_stats():
     section : str
         section this entry is about
     hits : int
-        hits per seconds calculated over last 10 sec
-    average10 : int
-        average of hits per second over last 10 mins
-    average60 : int
-        average of hits per second over last 60 mins
+        hits per seconds calculated over the given timeframe
+    average : int
+        average of hits per second over the given timeframe
     unique_hosts : int
-        number of different hosts calculated over last 10 mins
+        number of different hosts calculated over the given timeframe
     total_bytes : int
-        number of bytes transfered over last 10 mins
+        number of bytes transfered over the given timeframe
     availability : float
-        availability over the last 10 mins
+        availability over the the given timeframe
     codes_count : str
-        status codes over the last 10 mins
+        status codes over the the given timeframe
     time : datetime
         time from the log for this batch of stats
 
