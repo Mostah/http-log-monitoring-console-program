@@ -84,10 +84,8 @@ class SectionMetrics:
         time from the log for this batch of stats
     hits : int
         hits per seconds calculated over last 10 sec
-    average10 : int
-        average of hits per second over last 10 mins
-    average60 : int
-        average of hits per second over last 60 mins
+    average : int
+        average of hits per second over the given timeframe
     unique_hosts : int
         number of different hosts calculated over last 10 mins
     total_bytes : int
@@ -98,7 +96,7 @@ class SectionMetrics:
         status codes over the last 10 mins
     """
     
-    def __init__(self, section, time, hits, average10, average60, unique_hosts, total_bytes, availability, codes_count):
+    def __init__(self, section, time, hits, average, unique_hosts, total_bytes, availability, codes_count):
         """
         Parameters
         ----------
@@ -108,10 +106,8 @@ class SectionMetrics:
             time from the log for this batch of stats
         hits : int
             hits per seconds calculated over last 10 sec
-        average10 : int
-            average of hits per second over last 10 mins
-        average60 : int
-            average of hits per second over last 60 mins
+        average : int
+            average of hits per second over the given timeframe
         unique_hosts : int
             number of different hosts calculated over last 10 mins
         total_bytes : int
@@ -125,20 +121,18 @@ class SectionMetrics:
         self.section = section
         self.time = time
         self.hits = hits
-        self.average10 = average10
-        self.average60 = average60
+        self.average = average
         self.unique_hosts = unique_hosts
         self.total_bytes = total_bytes
         self.availability = availability
         self.codes_count = codes_count
 
     def __repr__(self):
-        return "SECTION: %s   TIME: %s   HITS: %s/s   AVERAGE10: %s/s   AVERAGE60: %s/s   UNIQUE_HOSTS: %s   TOTAL_BYTES: %sKB   AVAILABILITY: %s   CODES_COUNT: %s" \
+        return "SECTION: %s   TIME: %s   HITS: %s/s   AVERAGE: %s/s   UNIQUE_HOSTS: %s   TOTAL_BYTES: %sKB   AVAILABILITY: %s   CODES_COUNT: %s" \
             % (self.section,
                 self.time,
                 self.hits,
-                self.average10,
-                self.average60,
+                self.average,
                 self.unique_hosts,
                 self.total_bytes,
                 self.availability,

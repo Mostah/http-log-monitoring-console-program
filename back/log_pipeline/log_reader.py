@@ -59,10 +59,10 @@ class LogReader(Thread):
         self.batch = []
         
         # next element of the pipeline
-        self.statistics_manager = StatisticsManager()
+        self.statistics_manager = StatisticsManager(self, 10)
     
     def start_reading(self):
-        """method that start the process of reading logs from the file
+        """method that starts the process of reading logs from the file
         """
         
         # security to avoid race if at some point of the development log are generated and written in the log file
