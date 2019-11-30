@@ -6,9 +6,9 @@ This module contains the different services for the general traffic information 
 
 from flask import jsonify, request, Blueprint
 
-from back.app import app, db
-from back.app.models.general_traffic import GeneralTraffic
-from back.app.utils import required_fields
+from .. import app, db
+from ..models.general_traffic import GeneralTraffic
+from ..utils import required_fields
 
 general_traffic_blueprint = Blueprint('general-traffic', __name__)
 
@@ -23,18 +23,18 @@ def get_general_stats():
     status code : int
         HTTP status code of the request
     """
-    
     last_general_stats = GeneralTraffic.query\
         .order_by(GeneralTraffic.time.desc())\
-        .first_or_404()
-    return jsonify(last_general_stats.as_dict()), 200
+        .limit(1)\
+        .all()
+    return jsonify([stats.as_dict() for stats in last_general_stats]), 200
 
 # TODO add time to required fields
 @general_traffic_blueprint.route('/add', methods=['POST'])
 @required_fields(['hits', 'minimum', 'average', 'maximum', 'unique_hosts', 'total_bytes', 'availability'])
 def add_general_stats():
     """ Route that create new a entry for a general traffic information in database
-      
+       
     Parameters
     ----------
     hits : int

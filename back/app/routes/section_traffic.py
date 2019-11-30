@@ -7,9 +7,9 @@ This module contains the different services for the sections traffic information
 from flask import jsonify, request, Blueprint
 from sqlalchemy import func
 
-from back.app import app, db
-from back.app.models.section_traffic import SectionTraffic
-from back.app.utils import required_fields
+from .. import app, db
+from ..models.section_traffic import SectionTraffic
+from ..utils import required_fields
 
 section_traffic_blueprint = Blueprint('section-traffic', __name__)
 

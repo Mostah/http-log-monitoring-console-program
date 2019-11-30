@@ -4,9 +4,9 @@ back.app.models.general_traffic
 This module contains the model format of the traffic stats over the whole website.
 """
 
-from back.app import db
+from .. import db
 from datetime import datetime
-from back.app.models.json import JsonModel
+from ..models.json import JsonModel
 
 class GeneralTraffic(db.Model, JsonModel):
     """

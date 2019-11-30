@@ -4,9 +4,9 @@ back.app.models.section_traffic
 This module contains the model format of the traffic stats from a section.
 """
 
-from back.app import db
+from .. import db
 from datetime import datetime
-from back.app.models.json import JsonModel
+from ..models.json import JsonModel
 
 class SectionTraffic(db.Model, JsonModel):
     """

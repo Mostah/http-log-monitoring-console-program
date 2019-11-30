@@ -83,15 +83,15 @@ class Service:
         """get stats computed from the selected website
         """
         
-        r = requests.get(self.API_URL+'/general-traffic/last').json()
+        r = requests.get(self.API_URL+'/general-traffic/last').json()[0]
         data = ['',
                 'Hits (10s):         '+str(r['hits'])+'/s',
                 '',
-                'Mininimum:          '+str(r['minimum'])+'/s',
-                'Average:            '+str(r['maximum'])+'/s',
-                'Maximum:            '+str(r['average'])+'/s',
+                'Mininimum:          '+str(round(r['minimum'],2))+'/s',
+                'Average:            '+str(round(r['average'],2))+'/s',
+                'Maximum:            '+str(round(r['maximum'],2))+'/s',
                 '',
-                'Availability:       '+str(r['availability']),
+                'Availability:       '+str(round(r['availability'],2)),
                 'Unique hosts:       '+str(r['unique_hosts']),
                 'Total Bytes:        '+str(r['total_bytes'])+'KB' ]
         
@@ -104,11 +104,11 @@ class Service:
         r = requests.get(self.API_URL+'/section-traffic/lasts').json()
         data = [[
             entry['section'],
-            str(entry['hits'])+'/s',
-            str(entry['average'])+'/s',
+            str(round(entry['hits'],2))+'/s',
+            str(round(entry['average'],2))+'/s',
             entry['unique_hosts'],
             str(entry['total_bytes'])+'KB',
-            entry['availability'],
+            round(entry['availability'],2),
             entry['codes_count']
         ] for entry in r]
         

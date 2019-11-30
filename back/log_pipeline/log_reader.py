@@ -9,7 +9,7 @@ from threading import Lock, Thread
 from datetime import datetime, timedelta
 import time
 
-from statistics_manager import StatisticsManager
+from .statistics_manager import StatisticsManager
 
 class LogReader(Thread):
     """ Module, first bloc of the pipeline, that read logs from a file and convoy them through the pipeline.
@@ -37,7 +37,7 @@ class LogReader(Thread):
 
     FIELDS_NAMES = ["remotehost","rfc931","authuser","date","request","status","bytes"]  
     
-    def __init__(self, file = '../logs/sample_csv.txt'):
+    def __init__(self, file = 'back/logs/sample_csv.txt'):
         """
         Parameters
         ----------
@@ -112,5 +112,3 @@ class LogReader(Thread):
     #TODO discard improperly formatted lines, unformated lines: if rest key of none value in field names, and check each value of each field with rege
     def _is_formatted(self, log):
         return True
-    
-LogReader().start_reading()

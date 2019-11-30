@@ -6,9 +6,9 @@ This module contains the different services for the alerts table.
 
 from flask import jsonify, request, Blueprint
 
-from back.app import app, db
-from back.app.models.alerts import Alerts
-from back.app.utils import required_fields
+from .. import app, db
+from ..models.alerts import Alerts
+from ..utils import required_fields
 
 alerts_blueprint = Blueprint('alerts', __name__)
 

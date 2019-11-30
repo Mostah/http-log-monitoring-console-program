@@ -4,9 +4,9 @@ back.app.models.alerts
 This module contains the model format for the alerts.
 """
 
-from back.app import db
+from .. import db
 from datetime import datetime
-from back.app.models.json import JsonModel
+from ..models.json import JsonModel
 
 class Alerts(db.Model, JsonModel):
     """
