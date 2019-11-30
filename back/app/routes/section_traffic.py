@@ -31,9 +31,8 @@ def get_sections_stats():
         .all()
     return jsonify([stats[0].as_dict() for stats in last_sections_stats]), 200
 
-# TODO add time to required fields
 @section_traffic_blueprint.route('/add', methods=['POST'])
-@required_fields(['section','hits', 'average', 'unique_hosts', 'total_bytes', 'availability', 'error_codes_count'])
+@required_fields(['section','hits', 'average', 'unique_hosts', 'total_bytes', 'availability', 'error_codes_count', 'time'])
 def add_section_stats():
     """ Route that create new a entry for a section traffic information in database
       

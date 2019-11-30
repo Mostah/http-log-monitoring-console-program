@@ -11,7 +11,7 @@ import time
 
 from .statistics_manager import StatisticsManager
 
-class LogReader(Thread):
+class LogReader:
     """ Module, first bloc of the pipeline, that read logs from a file and convoy them through the pipeline.
     
     Attributes
@@ -37,17 +37,19 @@ class LogReader(Thread):
 
     FIELDS_NAMES = ["remotehost","rfc931","authuser","date","request","status","bytes"]  
     
-    def __init__(self, file = 'back/logs/sample_csv.txt'):
+    def __init__(self, timeframe = 10, timewindow = 120, threshold = 10, file = 'back/logs/sample_csv.txt' ):
         """
         Parameters
         ----------
         file : str, optional
-            the file location of the logs, a sample by default 
+            the file location of the logs, a sample by default
+        timeframe : int, optional
+            timeframe in minutes over with the stats are computer
+        timewindow : int, optional
+            timeframe use to compute alerts stats
+        threshold : int, optional
+            number of hits per second use as a reference to raise or drop an alert
         """
-        
-        # instanciation of the parent
-        Thread.__init__(self)
-        self.daemon = True
         
         # status of the reader
         self.file = file
@@ -59,7 +61,7 @@ class LogReader(Thread):
         self.batch = []
         
         # next element of the pipeline
-        self.statistics_manager = StatisticsManager(self, 10)
+        self.statistics_manager = StatisticsManager(self, timeframe, timewindow, threshold)
     
     def start_reading(self):
         """method that starts the process of reading logs from the file

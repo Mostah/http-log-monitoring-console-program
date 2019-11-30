@@ -49,7 +49,7 @@ class StatisticsManager:
     
     """
     
-    def __init__(self, log_reader, timeframe):
+    def __init__(self, log_reader, timeframe, timewindow, threshold):
         """
         Parameters
         ----------
@@ -57,6 +57,10 @@ class StatisticsManager:
             a reference to the log reader to get access to the fictional time
         timeframe : int
             timeframe in minutes over with the stats are computer
+        timewindow : int, optional
+            timeframe use to compute alerts stats
+        threshold : int, optional
+            number of hits per second use as a reference to raise or drop an alert
         """
         
         self.log_reader = log_reader
@@ -74,9 +78,10 @@ class StatisticsManager:
 
         # next blocs of the pipeline
         self.service = Service()
-        self.alerter = Alerter(log_reader)
-
+        self.alerter = Alerter(log_reader, timewindow, threshold)
         
+        # clean the history
+        self.service.reset_database()
     
     def push_logs(self, batch):
         """
@@ -158,7 +163,7 @@ class StatisticsManager:
             unique_hosts = Statistics.get_unique_hosts(batch),
             total_bytes = Statistics.get_total_bytes(batch),
             availability = Statistics.get_availability(batch),
-            error_codes_count = '  '.join([key + ': ' + str(value) for key, value in Statistics.get_codes_count(batch).items() if int(key) > 300])
+            error_codes_count = '  '.join([key + ': ' + str(value) for key, value in sorted(Statistics.get_codes_count(batch).items())if int(key) > 300])
         ) for section, batch in self.sections_batch.items()}
 
     

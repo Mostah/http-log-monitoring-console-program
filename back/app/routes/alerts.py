@@ -29,9 +29,8 @@ def get_alerts_history():
         .limit(20)
     return jsonify([alert.as_dict() for alert in alerts_history]), 200
 
-# TODO add time to required fields
 @alerts_blueprint.route('/add', methods=['POST'])
-@required_fields(['section', 'status', 'hits'])
+@required_fields(['section', 'status', 'hits', 'time'])
 def createAlerts():
     """ Route that create new a entry for an alert in database
     

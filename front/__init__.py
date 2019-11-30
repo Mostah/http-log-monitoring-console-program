@@ -1,1 +1,1 @@
-alert_threshold = 0
+alert_threshold = 10

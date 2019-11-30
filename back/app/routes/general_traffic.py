@@ -29,9 +29,8 @@ def get_general_stats():
         .all()
     return jsonify([stats.as_dict() for stats in last_general_stats]), 200
 
-# TODO add time to required fields
 @general_traffic_blueprint.route('/add', methods=['POST'])
-@required_fields(['hits', 'minimum', 'average', 'maximum', 'unique_hosts', 'total_bytes', 'availability'])
+@required_fields(['hits', 'minimum', 'average', 'maximum', 'unique_hosts', 'total_bytes', 'availability', 'time'])
 def add_general_stats():
     """ Route that create new a entry for a general traffic information in database
        

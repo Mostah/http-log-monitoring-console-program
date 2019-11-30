@@ -73,7 +73,7 @@ class Service:
                 'Selected timeframe    '+str(self.TIMEFRAME)+'min',
                 '',
                 'Time monitoring:      '+str(time_monitoring)[:-7], 
-                'Alert Threshold:      '+str(self.alert_threshold)+'s', 
+                'Alert Threshold:      '+str(self.alert_threshold), 
                 'Alert Window:         '+str(self.alert_window)+'s', 
                 '', 
                 'Press enter or ctrl-c to quit']

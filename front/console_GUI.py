@@ -8,7 +8,6 @@ import npyscreen
 from datetime import datetime
 
 from .service import Service
-from . import alert_threshold
 
 class ConsoleGUI(npyscreen.NPSApp):
     """
@@ -19,12 +18,12 @@ class ConsoleGUI(npyscreen.NPSApp):
     alert_threshold : int
         threshold from which an alert is triggered
     alert_window : int
-        time (in seconds) over which is calculated the average hits for the alert
+        timeframe (in seconds) over which is calculated the average hits for the alert, 120 by default
     timeframe : int
-        timeframe selected by the user over which stats are computed
+        timeframe (in min) selected by the user over which stats are computed, 10 by default
     """
 
-    def __init__(self, alert_threshold, alert_window, timeframe):
+    def __init__(self, alert_threshold, alert_window = 2, timeframe = 10):
         """
         Parameters
         ----------
@@ -47,6 +46,10 @@ class ConsoleGUI(npyscreen.NPSApp):
         
         # reference to Service module functions that return data values
         self.service = Service(alert_threshold, alert_window, timeframe)
+        
+        # set the threshold for the stats grid
+        global threshold
+        threshold = alert_threshold
         
 
     def while_waiting(self):
@@ -134,7 +137,7 @@ class StatGrid(npyscreen.GridColTitles):
     # I use spaces to identify the column : 
     # one ' ' is hits, two ' ' is average, three ' ' is availability
     def custom_print_cell(self, actual_cell, cell_display_value):
-        
+        global threshold
         # error code count columns
         if '     ' in cell_display_value:
             actual_cell.color = 'STANDOUT'
@@ -144,27 +147,41 @@ class StatGrid(npyscreen.GridColTitles):
             actual_cell.color = 'DEFAULT'
         
         # availability column
-        elif '   ' in cell_display_value and cell_display_value <= '0.8':
+        elif '   ' in cell_display_value and self.extract_value(cell_display_value) < 0.8:
             actual_cell.color = 'DANGER'
-        elif '   ' in cell_display_value and cell_display_value <= '0.9':
+        elif '   ' in cell_display_value and self.extract_value(cell_display_value) <= 0.9:
             actual_cell.color = 'CAUTION'
-        elif '   ' in cell_display_value and cell_display_value < '1.0':
+        elif '   ' in cell_display_value and self.extract_value(cell_display_value) < 1.0:
             actual_cell.color = 'SAFE'
             
         # average column 
-        elif '  ' in cell_display_value and cell_display_value < str(0.8 * alert_threshold):
+        elif '  ' in cell_display_value and self.extract_value(cell_display_value) < 0.8 * threshold:
             actual_cell.color = 'SAFE'
-        elif '  ' in cell_display_value and cell_display_value < str(alert_threshold):
+        elif '  ' in cell_display_value and self.extract_value(cell_display_value) < threshold:
             actual_cell.color = 'CAUTION'
-        elif '  ' in cell_display_value and cell_display_value > str(alert_threshold):
+        elif '  ' in cell_display_value and self.extract_value(cell_display_value) >= threshold:
             actual_cell.color = 'DANGER'
             
         # hits column
-        elif ' ' in cell_display_value and cell_display_value < str(0.5 * alert_threshold):
+        elif ' ' in cell_display_value and self.extract_value(cell_display_value) < 0.5 * threshold:
             actual_cell.color = 'SAFE'
-        elif ' ' in cell_display_value and cell_display_value < str(1.5 * alert_threshold):
+        elif ' ' in cell_display_value and self.extract_value(cell_display_value) < 1.5 * threshold:
             actual_cell.color = 'CAUTION'
-        elif ' ' in cell_display_value and cell_display_value > str(1.5 * alert_threshold):
+        elif ' ' in cell_display_value and self.extract_value(cell_display_value) >= 1.5 * threshold:
             actual_cell.color = 'DANGER'
         else:
             actual_cell.color = 'STANDOUT'
+            
+    def extract_value(self,cell_display_value):
+        """ the purpose of this method is to extract the value (without the unit) of a cell
+        in order to make comparison with the threshold """
+        
+        value = ''
+        for char in cell_display_value:
+            if char in ['0','1','2','3','4','5','6','7','8','9','.']:
+                value += char
+        return float(value)
+
+# I couldn't find a way to pass props to the StatGrid class, therefore
+# I defined this global variable to do the job
+threshold = 10
