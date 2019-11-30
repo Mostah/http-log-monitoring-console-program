@@ -8,6 +8,7 @@ import npyscreen
 from datetime import datetime
 
 from .service import Service
+from . import alert_threshold
 
 class ConsoleGUI(npyscreen.NPSApp):
     """
@@ -46,6 +47,7 @@ class ConsoleGUI(npyscreen.NPSApp):
         
         # reference to Service module functions that return data values
         self.service = Service(alert_threshold, alert_window, timeframe)
+        
 
     def while_waiting(self):
         """ defines the default actions to be performed while waiting for user
@@ -91,7 +93,7 @@ class ConsoleGUI(npyscreen.NPSApp):
         self.sections_stats_title = self.window.add(npyscreen.TitleText, name='Most Visited Sections', relx=2, rely=18)
         self.sections_stats_title.editable = False
         self.sections_stats_grid = self.window.add(StatGrid, max_height=12, column_width=20, relx=2, rely=20, 
-                                                   col_titles=['Sections','Hits (10s)','Average hits','Unique hosts','Total Bytes','Availability','Error codes count'] )
+                                                   col_titles=['Sections','Hits (10s)','Average hits','Unique hosts','Total Bytes','Availability','Error codes count'])
         self.sections_stats_grid.editable = False
         self.sections_stats_grid.values = []
 
@@ -126,15 +128,43 @@ class AlertGrid(npyscreen.GridColTitles):
             actual_cell.color = 'SAFE'
         else:
             actual_cell.color = 'CAUTION'
-            
+   
 class StatGrid(npyscreen.GridColTitles):
-
+    
+    # I use spaces to identify the column : 
+    # one ' ' is hits, two ' ' is average, three ' ' is availability
     def custom_print_cell(self, actual_cell, cell_display_value):
-        if cell_display_value <= '0.8':
+        
+        # error code count columns
+        if '     ' in cell_display_value:
+            actual_cell.color = 'STANDOUT'
+        
+        # section column
+        elif '    ' in cell_display_value:
+            actual_cell.color = 'DEFAULT'
+        
+        # availability column
+        elif '   ' in cell_display_value and cell_display_value <= '0.8':
             actual_cell.color = 'DANGER'
-        elif cell_display_value <= '0.9':
+        elif '   ' in cell_display_value and cell_display_value <= '0.9':
             actual_cell.color = 'CAUTION'
-        elif cell_display_value < '1.0':
+        elif '   ' in cell_display_value and cell_display_value < '1.0':
             actual_cell.color = 'SAFE'
+            
+        # average column 
+        elif '  ' in cell_display_value and cell_display_value < str(0.8 * alert_threshold):
+            actual_cell.color = 'SAFE'
+        elif '  ' in cell_display_value and cell_display_value < str(alert_threshold):
+            actual_cell.color = 'CAUTION'
+        elif '  ' in cell_display_value and cell_display_value > str(alert_threshold):
+            actual_cell.color = 'DANGER'
+            
+        # hits column
+        elif ' ' in cell_display_value and cell_display_value < str(0.5 * alert_threshold):
+            actual_cell.color = 'SAFE'
+        elif ' ' in cell_display_value and cell_display_value < str(1.5 * alert_threshold):
+            actual_cell.color = 'CAUTION'
+        elif ' ' in cell_display_value and cell_display_value > str(1.5 * alert_threshold):
+            actual_cell.color = 'DANGER'
         else:
             actual_cell.color = 'STANDOUT'

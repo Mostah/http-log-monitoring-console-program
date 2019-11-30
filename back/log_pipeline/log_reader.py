@@ -68,7 +68,9 @@ class LogReader(Thread):
         # security to avoid race if at some point of the development log are generated and written in the log file
         with Lock():
             # this way it doesn't load the file in memory but create an iterable object from which we can load selected line in memory
-            with open(self.file, 'r') as logs: 
+            with open(self.file, 'r') as logs:
+                # the first line of the csv file is the header
+                header = logs.__next__() 
                 while self.running:
                     try:
                         # iterates over the lines, the previous one is garbage collected

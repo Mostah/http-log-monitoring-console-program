@@ -102,14 +102,15 @@ class Service:
         """
         
         r = requests.get(self.API_URL+'/section-traffic/lasts').json()
+        # as i cannot distinguish columns in my console grid, I use space at the end to identify them
         data = [[
-            entry['section'],
-            str(round(entry['hits'],2))+'/s',
-            str(round(entry['average'],2))+'/s',
-            entry['unique_hosts'],
+            entry['section']+'    ',
+            str(round(entry['hits'],2))+'/s'+' ',
+            str(round(entry['average'],2))+'/s'+'  ',
+            str(entry['unique_hosts']),
             str(entry['total_bytes'])+'KB',
-            round(entry['availability'],2),
-            entry['error_codes_count']
+            str(round(entry['availability'],2))+'   ',
+            entry['error_codes_count']+'     '
         ] for entry in r]
         
         return data
