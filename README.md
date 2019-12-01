@@ -54,16 +54,17 @@ python3 monitoring.py [-h] [--f FILE] [--thd THRESHOLD]
 # e.g: python3 monitoring.py --f access.log --thd 10 --wd 120 --tf 10
 ```
 
+* FILE: file containing the formatted logs
+* THRESHOLD: average hits per seconds that should trigger an alert
+* WINDOW_TIME: timeframe (in sec) over which is computed the average hits per seconds for the alerting system (120 sec by default)
+* TIMEFRAME: timeframe (in min) over which is computed all the statistics (10 min by default)
+
+
 Run tests
 
 ```bash
 make run-test
 ```
-
-* FILE: file containing the formatted logs
-* THRESHOLD: average hits per seconds that should trigger an alert
-* WINDOW_TIME: timeframe (in sec) over which is computed the average hits per seconds for the alerting system (120 sec by default)
-* TIMEFRAME: timeframe (in min) over which is computed all the statistics (10 min by default)
 
 ---
 ## Project structure
