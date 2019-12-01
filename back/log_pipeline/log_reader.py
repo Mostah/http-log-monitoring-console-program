@@ -25,7 +25,7 @@ class LogReader:
     fictional_time : datetime
         scenario time, calculated with the time_difference and the current time
     FIELDS_NAMES : list
-        list of fields name from logs
+        format of the csv file that the program can handle
         
     Methods
     -------
