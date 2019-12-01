@@ -56,8 +56,8 @@ class LogReader:
         self.running = True
         
         # for the purpose of running a scenario from a log file
-        self.time_difference = None #timedelta
-        self.fictional_time = None #datetime
+        self.time_difference = None
+        self.fictional_time = None
         self.batch = []
         
         # next element of the pipeline
@@ -100,9 +100,10 @@ class LogReader:
         # logs may not be in order, but I assume there is no more than 3s difference between two successive logs,
         # thus it should have no major impact in the stats computation as it is computed over 10s
         self.fictional_time = datetime.now() - self.time_difference
+        
         while self.fictional_time < datetime.fromtimestamp(int(log['date'])):
             
-            # transfer the logs throught the next bloc of the pipeline, at max 1 time per seconds
+            # transfer the logs throught the next bloc of the pipeline, at max 1 call per seconds
             self.statistics_manager.push_logs(self.batch)
             self.batch = []
             
@@ -115,6 +116,6 @@ class LogReader:
         # insert the log at the begining to keep the log in the same order as in the file
         self.batch.insert(0,log)
          
-    #TODO discard improperly formatted lines, unformated lines: if rest key of none value in field names, and check each value of each field with rege
+    #TODO discard improperly formatted lines
     def _is_formatted(self, log):
         return True

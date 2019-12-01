@@ -4,8 +4,9 @@ back.app.models.general_traffic
 This module contains the model format of the traffic stats over the whole website.
 """
 
-from .. import db
 from datetime import datetime
+
+from .. import db
 from ..models.json import JsonModel
 
 class GeneralTraffic(db.Model, JsonModel):
@@ -17,19 +18,19 @@ class GeneralTraffic(db.Model, JsonModel):
     id : int
         id of the entry
     hits : int
-        hits per seconds calculated over last 10 sec
+        hits per seconds calculated over the last 10 sec
     minimum : int
-        minimum hits per seconds encountered over the last 10 sec
+        minimum hits per seconds encountered over the selected timeframe
     average : int
-        average of hits per second over last 10 mins
+        average of hits per second over the selected timeframe
     maximum : int
-        maximum hits per seconds encountered over the last 10 sec
+        maximum hits per seconds encountered over the selected timeframe
     unique_hosts : int
-        number of different hosts calculated over last 10 mins
+        number of different hosts calculated over the selected timeframe
     total_bytes : int
-        number of bytes transfered over last 10 mins
+        number of bytes transfered over the selected timeframe
     availability : float
-        availability over the last 10 mins
+        availability over the the selected timeframe
     time : datetime
         time from the log for this batch of stats
     """

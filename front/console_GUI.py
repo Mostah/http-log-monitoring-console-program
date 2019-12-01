@@ -1,3 +1,4 @@
+
 """
 front.console_GUI
 
@@ -16,23 +17,23 @@ class ConsoleGUI(npyscreen.NPSApp):
     Attributes
     ----------
     alert_threshold : int
-        threshold from which an alert is triggered
+        threshold use to trigger an alert
     alert_window : int
-        timeframe (in seconds) over which is calculated the average hits for the alert, 120 by default
+        timeframe (in seconds) over which is calculated the average hits for the alerting system
     timeframe : int
-        timeframe (in min) selected by the user over which stats are computed, 10 by default
+        timeframe (in min) selected by the user over which all stats are computed
     """
 
-    def __init__(self, alert_threshold, alert_window = 2, timeframe = 10):
+    def __init__(self, alert_threshold, alert_window, timeframe):
         """
         Parameters
         ----------
         alert_threshold : int
-            threshold from which an alert is triggered
+            threshold use to trigger an alert
         alert_window : int
-            time (in seconds) over which is calculated the average hits for the alert
+            time (in seconds) over which is calculated the average hits for the alerting system
         timeframe : int
-            timeframe selected by the user over which stats are computed
+            timeframe selected by the user over which all stats are computed
         """
         
         # npyscreen form widget, parent of all widgets in GUI
@@ -44,7 +45,7 @@ class ConsoleGUI(npyscreen.NPSApp):
         self.sections_stats_grid = None
         self.alert_history_grid = None
         
-        # reference to Service module functions that return data values
+        # reference to Service module methods that return data values
         self.service = Service(alert_threshold, alert_window, timeframe)
         
         # set the threshold for the stats grid
@@ -53,7 +54,7 @@ class ConsoleGUI(npyscreen.NPSApp):
         
 
     def while_waiting(self):
-        """ defines the default actions to be performed while waiting for user
+        """ defines the default actions to be performed while waiting to rerender.
         here this function updates widget data values periodically
         """
 
@@ -74,7 +75,7 @@ class ConsoleGUI(npyscreen.NPSApp):
         this function help in initial widget setup and rendering
         """
 
-        # time(100ms) to wait before rerendering
+        # time(100ms) to wait before rerendering, there is one render every seconds
         self.keypress_timeout_default = 10
 
         # Form widget instance
@@ -92,18 +93,18 @@ class ConsoleGUI(npyscreen.NPSApp):
         self.traffic_information.entry_widget.scroll_exit = True
         self.traffic_information.values = []
         
-        # setup a section for Sections stats
+        # setup a section for Sections statistics
         self.sections_stats_title = self.window.add(npyscreen.TitleText, name='Most Visited Sections', relx=2, rely=18)
         self.sections_stats_title.editable = False
-        self.sections_stats_grid = self.window.add(StatGrid, max_height=12, column_width=20, relx=2, rely=20, 
+        self.sections_stats_grid = self.window.add(StatGrid, max_height=5, column_width=20, relx=2, rely=20, 
                                                    col_titles=['Sections','Hits (10s)','Average hits','Unique hosts','Total Bytes','Availability','Error codes count'])
         self.sections_stats_grid.editable = False
         self.sections_stats_grid.values = []
 
         # setup a section for Alert history
-        self.alerts_title_title = self.window.add(npyscreen.TitleText, name='Alert History', relx=2, rely=35)
+        self.alerts_title_title = self.window.add(npyscreen.TitleText, name='Alert History', relx=2, rely=30)
         self.alerts_title_title.editable = False
-        self.alert_history_grid = self.window.add(AlertGrid, max_height=11, column_width=35, relx=2,rely=37, max_width=115,
+        self.alert_history_grid = self.window.add(AlertGrid, max_height=5, column_width=35, relx=2,rely=32, max_width=115,
                                                   col_titles=['Info','Time','Hits'])
         self.alert_history_grid.editable = False
         self.alert_history_grid.values = []
@@ -122,8 +123,8 @@ class WindowForm(npyscreen.ActionForm):
     
 class AlertGrid(npyscreen.GridColTitles):
     # You need to override custom_print_cell to manipulate how
-    # a cell is printed. In this example we change the color of the
-    # text depending on the string value of cell.
+    # a cell is printed. However you can only access the value, here
+    # we check if a specific word is in the cell
     def custom_print_cell(self, actual_cell, cell_display_value):
         if 'High' in cell_display_value:
             actual_cell.color = 'DANGER'
@@ -134,11 +135,12 @@ class AlertGrid(npyscreen.GridColTitles):
    
 class StatGrid(npyscreen.GridColTitles):
     
-    # I use spaces to identify the column : 
-    # one ' ' is hits, two ' ' is average, three ' ' is availability
+    # As we can only get access to a single cell and its value without
+    # any other context, I use spaces to identify columns : 
     def custom_print_cell(self, actual_cell, cell_display_value):
         global threshold
-        # error code count columns
+        
+        # error code count column
         if '     ' in cell_display_value:
             actual_cell.color = 'STANDOUT'
         

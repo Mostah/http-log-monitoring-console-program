@@ -5,7 +5,6 @@ front.service
 This module fetch and transform the data to be ready to display.
 """
 
-import random
 import requests
 from datetime import datetime
 
@@ -53,6 +52,7 @@ class Service:
         timeframe : int
             timeframe selected by the user over which stats are computed
         """
+        
         self.TIMEFRAME = timeframe
         self.alert_threshold = alert_threshold
         self.alert_window = alert_window
@@ -67,8 +67,8 @@ class Service:
         time_monitoring = now - self.begining_time
         
         data = ['',
-                'Description: If no timeframe is mentioned, stats are',
-                'calculated over the selected timeframe.',
+                'Description: If no specific timeframe is mentioned, stats are',
+                'computer over the one you selected.',
                 '',
                 'Selected timeframe    '+str(self.TIMEFRAME)+'min',
                 '',
@@ -77,13 +77,15 @@ class Service:
                 'Alert Window:         '+str(self.alert_window)+'s', 
                 '', 
                 'Press enter or ctrl-c to quit']
+        
         return data
 
     def get_traffic_information(self):
-        """get stats computed from the selected website
+        """the general information about the website's traffic
         """
         
         r = requests.get(self.API_URL+'/general-traffic/last').json()[0]
+        
         data = ['',
                 'Hits (10s):         '+str(r['hits'])+'/s',
                 '',
@@ -98,11 +100,12 @@ class Service:
         return data
     
     def get_sections_stats(self):
-        """get stats computed over all section
+        """get stats computed over all section of the website
         """
         
         r = requests.get(self.API_URL+'/section-traffic/lasts').json()
-        # as i cannot distinguish columns in my console grid, I use space at the end to identify them
+        
+        # as i cannot distinguish columns in my console grid, I use space to identify them
         data = [[
             entry['section']+'    ',
             str(round(entry['hits'],2))+'/s'+' ',
@@ -116,7 +119,7 @@ class Service:
         return data
     
     def get_alert_history(self):
-        """get history alert from all section
+        """ get the alert history for all sections
         """
         
         r = requests.get(self.API_URL+'/alerts/history').json()

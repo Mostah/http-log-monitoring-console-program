@@ -23,6 +23,7 @@ def get_general_stats():
     status code : int
         HTTP status code of the request
     """
+    
     last_general_stats = GeneralTraffic.query\
         .order_by(GeneralTraffic.time.desc())\
         .limit(1)\

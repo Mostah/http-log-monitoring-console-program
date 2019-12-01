@@ -167,7 +167,7 @@ class StatisticsManager:
         ) for section, batch in self.sections_batch.items()}
 
     
-    # TODO Implement regex instead of this ugly code
+    # TODO Implement regex instead of this code
     @staticmethod
     def _get_section(log):
         """parse the section of a log
