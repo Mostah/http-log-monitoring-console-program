@@ -106,8 +106,10 @@ class LogReader:
             self.statistics_manager.push_logs(self.batch)
             self.batch = []
             
-            # wait for the next second TODO calculate the right time to wait, not 1s
-            time.sleep(1)
+            # wait the exact amount of time for the next second to come up
+            time_to_wait = 1 - (datetime.now() - self.time_difference).time().microsecond / 1000000
+            time.sleep(time_to_wait)
+            
             self.fictional_time = datetime.now() - self.time_difference
 
         # insert the log at the begining to keep the log in the same order as in the file

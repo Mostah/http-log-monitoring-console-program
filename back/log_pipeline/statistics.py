@@ -43,7 +43,7 @@ class Statistics:
             period over which the stat is computed
         """
         
-        if len(batch) == 0:
+        if len(batch) == 0 or time_length == 0:
             return 0
         return len(batch) / time_length
     
@@ -85,8 +85,9 @@ class Statistics:
         batch : list
             list of formatted logs
         """
-        
         if len(batch) == 0:
+            # if the batch is empty, we can't know about the status of the website, 
+            # thus I decided it is available in that case
             return 1
         return len([log for log in batch if int(log['status']) < 300])/len(batch)
     

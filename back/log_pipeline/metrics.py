@@ -136,5 +136,5 @@ class SectionMetrics:
                 self.unique_hosts,
                 self.total_bytes,
                 self.availability,
-                self.codes_count
+                self.error_codes_count
               )

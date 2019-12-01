@@ -97,7 +97,7 @@ class Alerter():
         now = self.log_reader.fictional_time
         for section, batch in self.section_metrics_batch.items():
             self.section_metrics_batch[section] = [metrics for metrics in batch 
-                                                if (now - metrics.time) < timedelta(minutes = self.TIME_WINDOW)]
+                                                if (now - metrics.time) < timedelta(seconds = self.TIME_WINDOW)]
         
     def _is_high(self, section):
         """

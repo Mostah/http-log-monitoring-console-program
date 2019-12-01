@@ -26,6 +26,8 @@ prepare-server:
 		cd ../; \
 	)
 		
+run-test:
+	pytest
 
 run-server:
 	( \
