@@ -27,13 +27,21 @@ prepare-server:
 	)
 		
 run-test:
-	pytest
+	( \
+		source env/bin/activate; \
+		pytest; \
+	)
 
 run-server:
 	( \
+		source env/bin/activate; \
 		cd back; \
 		flask run; \
 	)
 
 run-app:
-		python3 monitoring.py
+	( \
+		source env/bin/activate; \
+		python3 monitoring.py; \
+	)
+
