@@ -27,6 +27,7 @@ This project is a simple console program that monitors HTTP traffic. I build the
 
 ```bash
 make init
+pip3 install -r requirements.txt
 ```
 
 ### Run
